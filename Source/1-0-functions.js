@@ -1,6 +1,8 @@
+ 
+function hello(x1, x2) {
 
-function h_4328llo(x) {}
+}
 
-function _world738297928(a, b) {}
+function x_1_remainder(a, b) {}
 
-function xzy(a,b) {}
+function xzy(a ,b) {}
