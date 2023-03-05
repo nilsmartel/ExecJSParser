@@ -10,7 +10,8 @@ use nom::{
 pub use util::Parser;
 
 fn main() {
-    let input = include_str!("../../Source/1-0-functions.js");
+    // let input = include_str!("../../Source/1-0-functions.js");
+    let input = include_str!("../../Source/1-1-comments.js");
 
     let (rest, ast) = AstBody::parse_ws(input).unwrap();
 
