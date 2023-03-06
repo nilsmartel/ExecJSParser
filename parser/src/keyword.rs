@@ -54,6 +54,20 @@ mod tests {
             assert!(p.is_err(), "expect terminated parser to fail");
         }
     }
+
+    #[test]
+    fn ass() {
+        let r = Assign::parse_ws("  =");
+        assert!(r.is_ok(), "expect = to be parsable");
+    }
+
+    #[test]
+    fn letitbe() {
+        let r = Let::parse_ws("let x =");
+        assert!(r.is_ok(), "expect let to be parsable");
+        let (rest, _) = r.unwrap();
+        assert_eq!(rest, " x =")
+    }
 }
 
 kwt!(Function, "function");

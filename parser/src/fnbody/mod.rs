@@ -38,3 +38,24 @@ impl Parser for BodyItem {
         ))(input)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn bodyitems() {
+        let case = "{
+  let nums = str(num)
+  let nums2 = str(nums, nums)
+
+  print(nums2)
+
+  return true
+}";
+        let r = BodyItem::parse(case);
+        assert!(r.is_ok(), "functionbody can be parsed");
+        let (rest, _) = r.unwrap();
+        assert_eq!(rest, "", "nothing remains");
+    }
+}
