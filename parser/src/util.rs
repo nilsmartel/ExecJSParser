@@ -1,7 +1,9 @@
-
 use core::panic;
 
-use nom::{IResult, bytes::complete::{ take_while, take_till, tag }, FindSubstring};
+use nom::{
+    bytes::complete::{tag, take_till, take_while},
+    FindSubstring, IResult,
+};
 
 pub trait Parser
 where
@@ -13,7 +15,6 @@ where
         // skip all the whitespace
         let (rest, _) = take_while(|c| matches!(c, ' ' | '\n' | '\t' | '\r'))(input)?;
 
-        
         // ignore line comments
         if let Some(rest) = rest.strip_prefix("//") {
             // skip to the end of the line
