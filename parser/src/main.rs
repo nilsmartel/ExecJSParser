@@ -3,7 +3,7 @@ mod util;
 
 use nom::{
     bytes::complete::{take_while, take_while1},
-    combinator::{self, cut, map, recognize},
+    combinator::{cut, map, recognize},
     multi::{many0, separated_list0},
     sequence::pair,
 };
