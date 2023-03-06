@@ -1,16 +1,22 @@
-
 function hello() {
   // function call
-  hello(hello()) 
+  return hello(hello()) 
 }
 
 function nope() {
   // literals
-  return false
+  return false8
+}
+
+function nothing() {
+  return null
 }
 
 function printNumber(num) {
   let nums = str(num)
+  let nums2 = str(nums, nums)
 
-  return print(nums)
+  print(nums2)
+
+  return true
 }

@@ -1,9 +1,9 @@
-use core::panic;
-
 use nom::{
     bytes::complete::{tag, take_till, take_while},
     FindSubstring, IResult,
 };
+
+use crate::keyword;
 
 pub trait Parser
 where
@@ -45,5 +45,16 @@ where
         }
 
         Self::parse(rest)
+    }
+}
+
+/// Wraps a parser into recognizing parenthesis
+pub fn paren<T>(parser: impl Fn(&str) -> IResult<&str, T>) -> impl Fn(&str) -> IResult<&str, T> {
+    move |input: &str| {
+        let (input, _) = keyword::Open::parse(input)?;
+        let (input, result) = parser(input)?;
+        let (input, _) = keyword::Close::parse_ws(input)?;
+
+        Ok((input, result))
     }
 }

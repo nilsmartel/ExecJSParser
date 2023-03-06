@@ -1,4 +1,7 @@
-use nom::bytes::complete::tag;
+use nom::{
+    bytes::complete::{tag, take_while_m_n},
+    combinator::not,
+};
 
 macro_rules! kw {
     ($name: ident, $content: expr) => {
@@ -14,10 +17,55 @@ macro_rules! kw {
     };
 }
 
-kw!(Function, "function");
+macro_rules! kwt {
+    ($name: ident, $content: expr) => {
+        pub struct $name;
+
+        impl crate::Parser for $name {
+            fn parse(input: &str) -> nom::IResult<&str, Self> {
+                let (rest, _) = tag($content)(input)?;
+                let cond = |c| matches!(c, 'a'..='z' | 'A'..='Z' | '_' | '0'..='9');
+                let (rest, _) = not(take_while_m_n(1, 1, cond))(rest)?;
+
+                Ok((rest, $name))
+            }
+        }
+    };
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::Parser;
+
+    use super::*;
+    #[test]
+    fn terminated_keyword() {
+        let cases = ["false", "false xyz", "false abc", "false-abc"];
+
+        for c in cases {
+            let p = False::parse(c);
+            assert!(p.is_ok(), "expect terminated parser to succeed");
+        }
+
+        let cases = ["false8", "falsexyz", "false_abc"];
+
+        for c in cases {
+            let p = False::parse(c);
+            assert!(p.is_err(), "expect terminated parser to fail");
+        }
+    }
+}
+
+kwt!(Function, "function");
+kwt!(False, "false");
+kwt!(True, "true");
+kwt!(Return, "return");
+kwt!(Let, "let");
+kwt!(Null, "null");
 
 kw!(Open, "(");
 kw!(Close, ")");
+kw!(Assign, "=");
 
 kw!(CurlyOpen, "{");
 kw!(CurlyClose, "}");

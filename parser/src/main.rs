@@ -1,5 +1,8 @@
+mod fnbody;
 mod keyword;
 mod util;
+
+use fnbody::FnBody;
 
 use nom::{
     bytes::complete::{take_while, take_while1},
@@ -11,7 +14,8 @@ pub use util::Parser;
 
 fn main() {
     // let input = include_str!("../../Source/1-0-functions.js");
-    let input = include_str!("../../Source/1-1-comments.js");
+    // let input = include_str!("../../Source/1-1-comments.js");
+    let input = include_str!("../../Source/2-0-expressions.js");
 
     let (rest, ast) = AstBody::parse_ws(input).unwrap();
 
@@ -55,20 +59,6 @@ impl Parser for FnDef {
         let (rest, body) = cut(FnBody::parse_ws)(rest)?;
 
         Ok((rest, FnDef { name, args, body }))
-    }
-}
-
-#[derive(Debug)]
-struct FnBody;
-
-impl Parser for FnBody {
-    fn parse(input: &str) -> nom::IResult<&str, Self> {
-        // {
-        let (rest, _) = keyword::CurlyOpen::parse(input)?;
-        // }
-        let (rest, _) = keyword::CurlyClose::parse_ws(rest)?;
-
-        Ok((rest, FnBody))
     }
 }
 
