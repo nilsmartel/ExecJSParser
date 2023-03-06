@@ -57,4 +57,15 @@ pub(crate) mod tests {
             assert_eq!(rest, "", "expect no input to remain")
         }
     }
+
+    #[test]
+    fn reddit() {
+        let cases = ["return x", "return false", "return str(nums)"];
+        for c in cases {
+            let r = Statement::parse(c);
+            assert!(r.is_ok(), "expect return to be parsed");
+            let (rest, _value) = r.unwrap();
+            assert_eq!(rest, "", "expect no input to remain")
+        }
+    }
 }
