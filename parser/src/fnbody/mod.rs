@@ -33,8 +33,9 @@ pub enum BodyItem {
 impl Parser for BodyItem {
     fn parse(input: &str) -> IResult<&str, Self> {
         alt((
-            map(Expression::parse, BodyItem::Expression),
+            // The order was wrong.
             map(statement::Statement::parse, BodyItem::Statement),
+            map(Expression::parse, BodyItem::Expression),
         ))(input)
     }
 }
@@ -44,7 +45,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn bodyitems() {
+    fn bodies() {
         let case = "{
   let nums = str(num)
   let nums2 = str(nums, nums)
@@ -53,7 +54,7 @@ mod tests {
 
   return true
 }";
-        let r = BodyItem::parse(case);
+        let r = FnBody::parse(case);
         assert!(r.is_ok(), "functionbody can be parsed");
         let (rest, _) = r.unwrap();
         assert_eq!(rest, "", "nothing remains");
