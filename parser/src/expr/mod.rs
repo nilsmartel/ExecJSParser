@@ -2,7 +2,7 @@ use nom::{branch::alt, combinator::map, multi::separated_list0, IResult};
 
 use crate::{keyword, util::paren, Ident, Parser};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Expression {
     FunctionCall {
         func: Box<Expression>,
@@ -11,6 +11,49 @@ pub enum Expression {
     BoolLiteral(bool),
     Null,
     Ident(String),
+}
+
+#[cfg(test)]
+mod expression_tests {
+    use super::*;
+
+    #[test]
+    fn funcall() {
+        let input = "hello(hello(), hello)";
+        let r = parse_functioncall(input);
+        assert!(r.is_ok(), "expect parser to succeed");
+        let (rest, _f) = r.unwrap();
+        assert_eq!(rest, "", "expect parser consume all content");
+    }
+
+    #[test]
+    fn boollit1() {
+        let input = "true";
+        let r = parse_bool(input);
+        assert!(r.is_ok(), "expect parser to succeed");
+        let (rest, _f) = r.unwrap();
+        assert_eq!(rest, "", "expect parser consume all content");
+    }
+
+    #[test]
+    fn boollit2() {
+        let input = "false";
+        let r = parse_bool(input);
+        assert!(r.is_ok(), "expect parser to succeed");
+        let (rest, _f) = r.unwrap();
+        assert_eq!(rest, "", "expect parser consume all content");
+    }
+
+    #[test]
+    fn nully() {
+        let input = "null";
+        let r = Expression::parse(input);
+        assert!(r.is_ok(), "expect parser to succeed");
+        let (rest, f) = r.unwrap();
+        assert_eq!(rest, "", "expect parser consume all content");
+
+        assert_eq!(f, Expression::Null);
+    }
 }
 
 impl Parser for Expression {
